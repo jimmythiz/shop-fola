@@ -1,0 +1,124 @@
+.sign-in-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 650px;
+    gap: 5rem;
+}
+.sign-in-container .sign-in-content{
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+.sign-in-container .sign-in-image .sign-in-img{
+    width: 100%;
+    height: 400px;
+}
+.sign-in-content .sign-in-create{
+    font-size: 36px;
+}
+.sign-in-content .sign-in-enterdetails{
+    font-size: 16px;
+}
+.sign-in-content form{
+    width: 371px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.sign-in-content form input{
+    width: 371px;
+    outline: none;
+    padding: .5rem;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 2px solid black;
+    display: block;
+}
+.sign-in-content .create-account{
+    width: 371px;
+    height: 56px;
+    text-align: center;
+    background-color: #DB4444;
+    color: white;
+    font-size: 16px;
+    border: none;
+}
+.sign-in-content .sign-with-google{
+    width: 371px;
+    height: 56px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sign-in-content .sign-with-google svg{
+    margin-right: 10px;
+}
+.sign-in-content form .already-have{
+    font-size: 16px;
+    text-align: center;
+}
+.sign-in-content form .already-have a{
+    color: black;
+    margin-left: 10px;
+}
+
+
+
+/* ---------------- Responsive ---------------- */
+
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .sign-in-container {
+    flex-direction: column;
+    height: auto;
+    gap: 3rem;
+    margin: 0 2rem;
+  }
+
+  .sign-in-container .sign-in-image .sign-in-img {
+    height: 300px;
+  }
+
+  .sign-in-content form,
+  .sign-in-content .create-account,
+  .sign-in-content .sign-with-google,
+  .sign-in-content form input {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .sign-in-content .sign-in-create {
+    font-size: 30px;
+  }
+}
+
+/* Mobile (≤600px) */
+@media (max-width: 600px) {
+  .sign-in-container {
+    flex-direction: column;
+    gap: 2rem;
+    margin: 0 1rem;
+  }
+
+  .sign-in-container .sign-in-image .sign-in-img {
+    height: 250px;
+  }
+
+  .sign-in-content form,
+  .sign-in-content .create-account,
+  .sign-in-content .sign-with-google,
+  .sign-in-content form input {
+    width: 100%;
+  }
+
+  .sign-in-content .sign-in-create {
+    font-size: 24px;
+  }
+
+  .sign-in-content .sign-in-enterdetails {
+    font-size: 14px;
+  }
+}

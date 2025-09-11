@@ -1,0 +1,66 @@
+.best-selling-category-container{
+    padding: 5rem 0 5rem 0;
+    border-bottom: #ccc 2px solid;
+}
+.best-selling-scroller{
+    display: flex;
+    overflow: auto;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;       
+    scroll-behavior: smooth;  
+    padding-bottom: 1rem;  
+    scrollbar-width: none;    
+    -ms-overflow-style: none;
+} 
+.best-selling-scroller::-webkit-scrollbar {
+  display: none;        
+}
+.best-selling-scroller a{
+    text-decoration: none;
+    color: initial;
+}
+
+
+/* ---------------- Responsive ---------------- */
+
+/* Medium devices ≤1024px */
+@media (max-width: 1024px) {
+  .best-selling-category-container {
+    padding: 4rem 1.5rem;
+  }
+
+  .best-selling-scroller {
+    gap: 1.5rem;
+  }
+}
+
+/* Small devices ≤768px */
+@media (max-width: 768px) {
+  .best-selling-category-container {
+    padding: 3rem 1rem;
+  }
+
+  .best-selling-scroller {
+    gap: 1rem;
+  }
+
+  .best-selling-scroller a {
+    flex: 0 0 45%; /* roughly 2 cards per screen */
+  }
+}
+
+/* Mobile ≤480px */
+@media (max-width: 480px) {
+  .best-selling-category-container {
+    padding: 2rem 0.5rem;
+  }
+
+  .best-selling-scroller {
+    gap: 0.8rem;
+  }
+
+  .best-selling-scroller a {
+    flex: 0 0 70%; /* 1 card per screen */
+  }
+}

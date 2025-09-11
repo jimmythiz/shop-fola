@@ -1,0 +1,88 @@
+.time-section-container{
+    padding: 5rem 0 5rem 0;
+    border-bottom: #ccc 2px solid;
+}
+.time-section-slider {
+  display: flex;
+  gap: 2rem;                
+  overflow-x: auto;         
+  scroll-behavior: smooth;  
+  padding-bottom: 1rem;  
+  scrollbar-width: none;    
+  -ms-overflow-style: none;
+}
+.time-section-slider::-webkit-scrollbar {
+  display: none;        
+}
+.time-section-slider a{
+    text-decoration: none;
+    color: initial;
+}
+/* section */
+.time-section-all-link{
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 0 0;
+}
+
+.time-section-all-link a{
+    text-decoration: none;
+    color: white;
+    background-color: #DB4444;
+    padding: .5rem 2.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* ---------------- Responsive ---------------- */
+
+/* Medium devices ≤1024px */
+@media (max-width: 1024px) {
+  .time-section-container {
+    padding: 4rem 1.5rem;
+  }
+
+  .time-section-slider {
+    gap: 1.5rem;
+  }
+}
+
+/* Small devices ≤768px */
+@media (max-width: 768px) {
+  .time-section-container {
+    padding: 3rem 1rem;
+  }
+
+  .time-section-slider {
+    gap: 1rem;
+  }
+
+  .time-section-slider a {
+    flex: 0 0 45%; /* show 2 cards per screen */
+  }
+
+  .time-section-all-link a {
+    padding: 0.5rem 2rem;
+    font-size: 14px;
+  }
+}
+
+/* Mobile ≤480px */
+@media (max-width: 480px) {
+  .time-section-container {
+    padding: 2rem 0.5rem;
+  }
+
+  .time-section-slider {
+    gap: 0.8rem;
+  }
+
+  .time-section-slider a {
+    flex: 0 0 70%; /* 1 card per screen */
+  }
+
+  .time-section-all-link a {
+    padding: 0.4rem 1.5rem;
+    font-size: 12px;
+  }
+}

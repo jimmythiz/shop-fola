@@ -1,0 +1,134 @@
+.nav-container{
+    padding: 2rem 0 .5rem 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.nav-container nav{
+    border-bottom: #828282 solid 3px;
+}
+.nav-container nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.nav-logo h2{
+    font-weight: 600;
+    font-size: 35px;
+}
+.nav-links ul{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+}
+.nav-links ul li{
+    list-style-type: none;
+    cursor: pointer;
+    font-weight: 400;
+}
+.nav-links ul li .active{
+    font-weight: 800;
+}
+.nav-links ul li a{
+    text-decoration: none;
+    color: black;
+}
+.nav-actions{
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+.nav-search{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: fit-content;
+    margin-top: 2rem;
+}
+.nav-search input{
+    outline: none;
+    padding: .5rem 3rem .5rem 1rem;
+    border: none;
+    background-color: #ede9e9;
+}
+.nav-search .nav-search-icon{
+    position: absolute;
+    right: .7rem;
+    cursor: pointer;
+    font-weight: bolder;
+    font-size: 20px;
+}
+.nav-actions .nav-icons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.nav-icons a svg{
+    cursor: pointer;
+    font-size: 23px;
+    text-decoration: none;
+    color: black;
+}
+.nav-heart-icon{
+    cursor: pointer;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+}
+.nav-profile-dropdown{
+    position: absolute;
+    bottom: -130px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(55,46,56);
+    padding: .7rem;
+    border-radius: 10px;
+    gap: 1rem;
+}
+.nav-profile-dropdown a{
+    color: white;
+    text-decoration: none;
+}
+.nav-profile-dropdown a svg{
+    margin-right: 1rem;
+}
+.nav-hamburger {
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    left: -100%;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    align-items: center;
+    transition: left 0.3s ease-in-out;
+    padding: 1rem 0;
+    z-index: 100;
+  }
+  .nav-links.open {
+    left: 0;
+  }
+  .nav-links ul {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .nav-hamburger {
+    display: block;
+  }
+}

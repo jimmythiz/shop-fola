@@ -1,0 +1,93 @@
+.footer-container{
+    background-color: black;
+    color: white;
+    padding: 4rem 8rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.footer-container .footer-account,
+.footer-container .footer-exclusive,
+.footer-container .footer-support,
+.footer-container .footer-quick-links{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 200px;
+}
+
+.footer-container .footer-exclusive form input{
+    outline: white;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: .5rem 33px .5rem .5rem;
+    background-color: black;
+    color: white;
+    height: 100%;
+    width: 100%;
+  max-width: 250px;
+
+}
+.passthepo {
+  position: relative;
+  width: fit-content;
+  height: 48px;
+}
+.passthepo svg {
+  position: absolute;
+  height: 18px;
+  width: 20px;
+  top: 50%;
+  right: 8px; 
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.footer-container .footer-account a{
+    color: white;
+    text-decoration: none;
+}
+.footer-container .footer-quick-links a{
+    color: white;
+    text-decoration: none;
+}
+.footer-list{
+    font-size: 24px;
+}
+.footer-list-items{
+    font-size: 16px;
+}
+
+/* -------------------- Responsive -------------------- */
+@media (max-width: 1024px) {
+  .footer-container {
+    padding: 3rem 4rem;
+    justify-content: center;
+    gap: 4rem;
+  }
+  .footer-container > div {
+    flex: 1 1 45%; /* 2 columns */
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 2rem;
+    flex-direction: column; /* stack */
+    align-items: center;
+    text-align: center;
+  }
+  .footer-container > div {
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+  .footer-container .footer-exclusive form input {
+    max-width: 100%;
+  }
+  .passthepo {
+    width: 100%;
+  }
+  .passthepo svg {
+    right: 12px;
+  }
+}

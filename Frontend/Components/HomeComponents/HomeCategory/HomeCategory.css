@@ -1,0 +1,23 @@
+.home-category-container{
+    padding: 5rem 0 5rem 0;
+    border-bottom: #ccc 2px solid;
+}
+.home-category-scroller{
+    display: flex;
+    overflow: auto;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;       
+    scroll-behavior: smooth;  
+    padding-bottom: 1rem;  
+    scrollbar-width: none;    
+    -ms-overflow-style: none;
+}
+.home-category-scroller::-webkit-scrollbar {
+  display: none;        
+}
+
+.home-category-scroller a{
+  text-decoration: none;
+  color: inherit;
+}

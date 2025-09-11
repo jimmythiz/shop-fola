@@ -1,0 +1,37 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+.app-container {
+  margin: 0.4rem 1rem; /* Default - very small screens */
+}
+
+/* Small devices (≥480px) */
+@media (min-width: 480px) {
+  .app-container {
+    margin: 0.4rem 2rem;
+  }
+}
+
+/* Medium devices (≥768px) */
+@media (min-width: 768px) {
+  .app-container {
+    margin: 0.4rem 4rem;
+  }
+}
+
+/* Large devices (≥1024px) */
+@media (min-width: 1024px) {
+  .app-container {
+    margin: 0.4rem 6rem;
+  }
+}
+
+/* Extra large devices (≥1440px) */
+@media (min-width: 1440px) {
+  .app-container {
+    margin: 0.4rem 8rem;
+  }
+}
