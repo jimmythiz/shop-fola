@@ -67,7 +67,7 @@
     height: 50px;
     width: 50px;
 }
-.product-container .product-grid-list button{
+.product-container .product-grid-list a{
     background-color: greenyellow;
     width: 100px;
     border: none;
@@ -75,4 +75,9 @@
     cursor: pointer;
     height: 40px;
     border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+    text-decoration: none;
+    color: black;
+    
 }

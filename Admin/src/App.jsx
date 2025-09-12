@@ -5,11 +5,14 @@ import { Navigate } from 'react-router';
 import Navbar from "./Components/Navbar/Navbar"
 import Dashboard from "../src/Pages/Home/Home"
 import Products from "../src/Pages/Products/Products"
+import Tag from "../src/Pages/Tags/Tags"
+import Category from "../src/Pages/Categories/Categories"
 import Users from "../src/Pages/Users/Users"
 import Login from "../src/Pages/Login/Login"
 import AddProducts from "../src/Pages/AddProducts/AddProducts"
 import Orders from './Pages/Orders/Orders';
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute"
+import EditProduct from './Pages/EditProduct/EditProduct';
 
 import { useAuth } from '../lib/Context/AuthContext';
 
@@ -35,6 +38,21 @@ function App() {
           <Route path="/products" element={
             <ProtectedRoute>
               <Products />
+              </ProtectedRoute>
+          } />
+          <Route path="/products/:id" element={
+            <ProtectedRoute>
+              <EditProduct />
+              </ProtectedRoute>
+          } />
+          <Route path="/tags" element={
+            <ProtectedRoute>
+              <Tag />
+              </ProtectedRoute>
+          } />
+          <Route path="/categories" element={
+            <ProtectedRoute>
+              <Category />
               </ProtectedRoute>
           } />
 

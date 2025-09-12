@@ -2,6 +2,7 @@ import './Products.css'
 import { CiSearch } from "react-icons/ci";
 import { useState,useEffect } from 'react';
 import { fetchProducts } from '../../../lib/fetchData';
+import { Link } from 'react-router-dom';
 
 const Products = () => {
   const [products, setProducts] = useState([])
@@ -12,6 +13,7 @@ const Products = () => {
         try { 
           const data = await fetchProducts();
           setProducts(data.data);
+          console.log(data)
         } catch (error) {
           console.log(error);
         }
@@ -96,7 +98,7 @@ const Products = () => {
           
           {/* Actual Products */}
           {products.length > 0 ?
-          (filteredProducts.map((product,index)=>(
+          (products.map((product,index)=>(
           <div key={index} className="product-grid-list">
             <div>
               <img src={product.images[0]} alt="" />
@@ -105,7 +107,7 @@ const Products = () => {
             <p>{product.category_id}</p>
             <p>${product.price}</p>
             <p>{product.status}</p>
-            <button>Edit</button>
+            <Link to={`/products/${product._id}`}>Edit</Link>
           </div>
         ))) :
         (

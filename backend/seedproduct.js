@@ -1,8 +1,27 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import ProductSchema from "./schema/ProductsSchema.js";
+import slugify from "slugify";
+
+import Category from "./schema/categoryModel.js";
+import Tag from "./schema/tagsSchema.js";
+import Product from "./schema/ProductsSchema.js";
+import Cart from "./schema/cartSchema.js";
+import Order from "./schema/orderSchema.js";
 
 dotenv.config();
+const DB_URI = process.env.DB_URI;
+
+// Seed data
+const categories = [
+  "Phones", "Computers", "SmartWatches", "Cameras", "Headphones",
+  "Gaming", "Clothing", "Electronics", "Household", "Shoes",
+  "Beauty", "Perfume", "Women", "Men", "Children", "Baby",
+  "Groceries", "Others"
+];
+
+const tags = [
+  "Best Seller", "New", "Trending", "Male", "Female", "Children"
+];
 
 // Dummy products
 const products = [
@@ -10,9 +29,9 @@ const products = [
     name: "iPhone 15",
     description: "Latest Apple smartphone",
     price: 1200,
-    category_id: "Phones",
-    tag_ids: ["Best Seller", "New"],
-    size: "Medium",
+    categories: ["Phones"],
+    tags: ["Best Seller", "New"],
+    size: ["Medium"],
     color: "Black",
     quantity: 10,
     status: "Available",
@@ -23,78 +42,72 @@ const products = [
     name: "MacBook Pro 16\"",
     description: "Powerful laptop for professionals",
     price: 2500,
-    category_id: "Computers",
-    tag_ids: ["Trending"],
-    size: "Large",
+    categories: ["Computers"],
+    tags: ["Trending"],
+    size: ["Large"],
     color: "Silver",
     quantity: 5,
     status: "Available",
     rating: 4.8,
     images: ["https://example.com/images/macbookpro.jpg"]
-  },
-  {
-    name: "Samsung Galaxy Watch",
-    description: "Smartwatch with fitness tracking",
-    price: 300,
-    category_id: "SmartWatches",
-    tag_ids: ["New"],
-    size: "Small",
-    color: "Black",
-    quantity: 20,
-    status: "Available",
-    rating: 4.3,
-    images: ["https://example.com/images/galaxywatch.jpg"]
-  },
-  {
-    name: "Sony WH-1000XM5",
-    description: "Noise cancelling headphones",
-    price: 350,
-    category_id: "Headphones",
-    tag_ids: ["Best Seller", "Trending"],
-    size: "Medium",
-    color: "Black",
-    quantity: 15,
-    status: "Available",
-    rating: 4.7,
-    images: ["https://example.com/images/sonyheadphones.jpg"]
-  },
-  {
-    name: "Canon EOS R6",
-    description: "Mirrorless camera with high performance",
-    price: 2500,
-    category_id: "Cameras",
-    tag_ids: ["New"],
-    size: "Large",
-    color: "Black",
-    quantity: 8,
-    status: "Available",
-    rating: 4.9,
-    images: ["https://example.com/images/canoneosr6.jpg"]
   }
 ];
 
-// Connect to MongoDB and insert
 const seedDB = async () => {
   try {
-    await mongoose.connect(process.env.DB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("✅ MongoDB connected");
+    await mongoose.connect(DB_URI);
+    console.log("✅ MongoDB Connected");
 
-    // Clear existing products (optional)
-    await ProductSchema.deleteMany({});
-    console.log("🗑️ Existing products cleared");
+    // Clear existing data
+    await Category.deleteMany({});
+    await Tag.deleteMany({});
+    await Product.deleteMany({});
+    await Cart.deleteMany({});
+    await Order.deleteMany({});
+    console.log("🗑️ Existing collections cleared");
 
-    // Insert dummy products
-    await ProductSchema.insertMany(products);
-    console.log("✅ Dummy products inserted");
+    // Seed categories with slugs
+    const categoryDocs = await Category.insertMany(
+      categories.map(name => ({
+        name,
+        slug: slugify(name, { lower: true })
+      }))
+    );
+
+    // Seed tags with slugs
+    const tagDocs = await Tag.insertMany(
+      tags.map(name => ({
+        name,
+        slug: slugify(name, { lower: true })
+      }))
+    );
+
+    console.log("✅ Categories and Tags seeded");
+
+    // Map category/tag names to _id
+    const categoryMap = {};
+    categoryDocs.forEach(cat => categoryMap[cat.name] = cat._id);
+    const tagMap = {};
+    tagDocs.forEach(tag => tagMap[tag.name] = tag._id);
+
+    // Seed products with category/tag IDs and slugs
+    const productDocs = await Product.insertMany(
+      products.map(p => ({
+        ...p,
+        slug: slugify(p.name, { lower: true }),
+        categories: p.categories.map(cat => categoryMap[cat]),
+        tags: p.tags.map(tag => tagMap[tag])
+      }))
+    );
+
+    console.log("✅ Products seeded");
 
     process.exit();
   } catch (error) {
-    console.error("❌ Error seeding products:", error.message);
+    console.error("❌ Error seeding DB:", error);
     process.exit(1);
   }
 };
 
 seedDB();
+
