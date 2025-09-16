@@ -2,6 +2,9 @@ import User from "../schema/UserSchema.js";
 import jwt from "jsonwebtoken";
 import sendMail from "../config/mailer.js";
 import crypto from "crypto";
+import Cart from "../schema/CartSchema.js";
+import Order from "../schema/OrderSchema.js";
+
 
 const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -117,34 +120,32 @@ export const logIn = async (req,res) => {
     }
 }
 
-
 export const resetPassword = async (req,res) => {
-    try{
-        const { email } = req.body;
-        if (!email) {
-            return res.status(400).json({ message: "Enter email." });
-        }
-        if (!isValidEmail(email)) {
-            return res.status(400).json({ message: "Invalid email format." });
-        }
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "User not found." });
-        }
-        user.passwordResetToken = user.createPasswordResetToken();
-        const resetLink = `${process.env.FRONTEND_URL}/resetpassword?token=${user.passwordResetToken}`;
-        await user.save();
-        sendMail({  
-            email: user.email,
-            subject: "Password Reset Request",
-            message: `You requested a password reset. Click the link below to reset your password:\n${resetLink}\nIf you did not request this, please ignore this email.`
-        });
-        res.status(200).json({ message: "Password reset email sent." });
-    }catch(error){
-        console.error(error.message)
-        res.status(500).json({ message: "Server error. Please try again later." }); 
-    }
-}
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Enter email." });
+    if (!isValidEmail(email)) return res.status(400).json({ message: "Invalid email format." });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found." });
+
+    const rawToken = user.createPasswordResetToken(); // return raw token
+    await user.save();
+
+    const resetLink = `${process.env.FRONTEND_URL}/resetpassword?token=${rawToken}`;
+    sendMail({
+      email: user.email,
+      subject: "Password Reset Request",
+      message: `You requested a password reset. Click the link below:\n${resetLink}\nIf you did not request this, please ignore this email.`
+    });
+
+    res.status(200).json({ message: "Password reset email sent." });
+  } catch(error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
 export const confirmPasswordReset = async (req,res) => {
     try{
         const { token } = req.query;
@@ -247,23 +248,24 @@ export const updateAccount = async (req, res) => {
 
 
 export const deleteAccount = async (req,res) => {
-    try{
-        const userId = req.params.id;
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is required." });
-        }
-
-        const user = await User.findByIdAndDelete(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found." });
-        }
-        await Cart.findByIdAndDelete(user.cart);
-        await Order.deleteMany({ _id: { $in: user.orders } });
-
-        res.status(200).json({ message: "Account deleted successfully." });
-
-    }catch(error){
-        console.error(error.message)
-        res.status(500).json({ message: "Server error. Please try again later." });
+  try {
+    const userId = req.params.id;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
     }
-}
+
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Cleanup cart & orders linked to this user
+    await Cart.deleteOne({ user: user._id });
+    await Order.deleteMany({ user: user._id });
+
+    res.status(200).json({ message: "Account deleted successfully." });
+  } catch(error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};

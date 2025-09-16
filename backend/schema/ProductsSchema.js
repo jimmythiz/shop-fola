@@ -6,33 +6,29 @@ const productSchema = new mongoose.Schema({
   description: { type: String, required: true },
   price: { type: Number, required: true },
   
-  categories: [{
+   category_id: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category"
   }],
 
-  tags: [{
+   tag_ids: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tag"
   }],
 
-  variants: [{
-    size: { type: String, enum: ["Small", "Medium", "Large", "Extra Large"] },
-    color: String,
-    quantity: { type: Number, min: 0 }
-  }],
+  size: [{ type: String }], // <-- array of strings
+  color: [{ type: String }], 
 
-  brand: String,
+
+  quantity: { type: Number, default: 0 },
   
-  images: [{ type: String }],
 
   rating: {
-    average: { type: Number, default: 0, min: 0, max: 5 },
-    count: { type: Number, default: 0 }
-  },
+    average: { type: Number, default: 0, min: 0, max: 5 },},
 
   status: { type: String, enum: ["Available", "Sold Out"], default: "Available" },
 
+   images: [{ type: String }], 
 }, { timestamps: true });
 
 const Product = mongoose.model("Product", productSchema);
