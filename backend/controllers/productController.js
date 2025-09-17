@@ -1,12 +1,13 @@
 import Product from "../schema/ProductsSchema.js"
 import slugify from "slugify"
+import cloudinary from "../config/cloudinary.js";
 
 // Get all Products
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find()
-      .populate("categories", "name slug")  // only fetch certain fields
-      .populate("tags", "name slug");
+      .populate("category_id", "name slug")  // only fetch certain fields
+      .populate("tag_ids", "name slug");
 
     res.status(200).json({
       status: "Success",
@@ -26,8 +27,8 @@ export const getProduct = async (req, res) => {
   try {
     const id = req.params.id;
     const product = await Product.findById(id)
-      .populate("categories", "name slug")
-      .populate("tags", "name slug");
+      .populate("category_id", "name slug")
+      .populate("tag_ids", "name slug");
 
     if (!product) {
       return res.status(404).json({
@@ -63,17 +64,25 @@ export const createProduct = async (req, res) => {
       quantity,
       status,
       rating,
+      
     } = req.body;
+    let images = [];
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map((file) =>
+        cloudinary.uploader.upload(file.path, { folder: "products" })
+      );
 
-    // Cloudinary gives you the URL inside req.files
-    const images = req.files ? req.files.map(file => file.path) : [];
+      const uploadResults = await Promise.all(uploadPromises);
+      images = uploadResults.map((result) => result.secure_url); // save URLs only
+    }
 
     const product = new Product({
       name,
+      slug : slugify(name),
       description,
       price,
-      categories: Array.isArray(category_id) ? category_id : [category_id],
-      tags: Array.isArray(tag_ids) ? tag_ids : [tag_ids],
+      category_id: Array.isArray(category_id) ? category_id : [category_id],
+      tag_ids: Array.isArray(tag_ids) ? tag_ids : [tag_ids],
       size: Array.isArray(size) ? size : [size],
       color,
       quantity,
@@ -93,7 +102,10 @@ export const createProduct = async (req, res) => {
 export const updateProducts = async (req, res) => {
   try {
     const id = req.params.id;
-    const updateData = req.body;
+    let updateData = {...req.body};
+    if (updateData.name){
+      updateData.slug = slugify(updateData.name)
+    }
 
     // If new images uploaded, replace old ones
     if (req.files && req.files.length > 0) {

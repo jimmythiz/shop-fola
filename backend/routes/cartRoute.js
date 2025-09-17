@@ -4,25 +4,19 @@ import {
   getCart,
   editCart,
   updateCart,
-  deleteCart
+  deleteCart,
 } from "../controllers/cartController.js";
+import { isAuthenticated } from "../middleware/authMiddleware.js";
 
 const cartRouter = express.Router();
 
+// ADMIN: Get all carts
+cartRouter.get("/all-carts", getAllCarts);
 
-// ✅ Admin: Get all carts
-router.get("/", getAllCarts);
-
-// ✅ User: Get a single cart
-router.get("/:userId", getCart);
-
-// ✅ User: Add item(s) or update quantities
-router.post("/:userId", editCart);
-
-// ✅ User: Replace cart items completely
-router.put("/:userId", updateCart);
-
-// ✅ User: Delete cart
-router.delete("/:userId", deleteCart);
+// USER ROUTES: use JWT, no userId param
+cartRouter.get("/my-cart", isAuthenticated, getCart);
+cartRouter.post("/my-cart", isAuthenticated, editCart);
+cartRouter.put("/my-cart", isAuthenticated, updateCart);
+cartRouter.delete("/my-cart", isAuthenticated, deleteCart);
 
 export default cartRouter;

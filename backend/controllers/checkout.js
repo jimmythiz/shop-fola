@@ -1,5 +1,5 @@
-import Cart from "../models/cart.js";
-import Order from "../models/order.js";
+import Cart from "../schema/cartSchema.js";
+import Order from "../schema/orderSchema.js";
 
 export const checkout = async (req, res) => {
   try {

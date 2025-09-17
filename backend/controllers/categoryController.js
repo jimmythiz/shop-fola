@@ -1,9 +1,10 @@
+import slugify from "slugify";
 import Category from "../schema/categoryModel.js";
 
 // Get all Categories
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find().populate("parent", "name slug");
+    const categories = await Category.find().populate("name", "name slug");
     res.status(200).json({
       status: "Success",
       data: categories
@@ -20,7 +21,7 @@ export const getAllCategories = async (req, res) => {
 export const getCategory = async (req, res) => {
   try {
     const id = req.params.id;
-    const category = await Category.findById(id).populate("parent", "name slug");
+    const category = await Category.findById(id).populate("name", "name slug");
 
     if (!category) {
       return res.status(404).json({ status: "Error", data: "Category Not Found" });
@@ -37,10 +38,8 @@ export const addCategory = async (req, res) => {
   try {
     const newCategory = new Category({
       name: req.body.name,
-      slug: req.body.slug,
+      slug: slugify(req.body.name, { lower: true, strict: true }),
       description: req.body.description,
-      parent: req.body.parent || null,
-      image: req.body.image,
       status: req.body.status
     });
 
@@ -55,7 +54,12 @@ export const addCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, { new: true });
+     let updateData = { ...req.body };
+
+    if (updateData.name) {
+      updateData.slug = slugify(updateData.name);
+    }
+    const updatedCategory = await Category.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!updatedCategory) {
       return res.status(404).json({ status: "Error", data: "Category Not Found" });

@@ -23,8 +23,7 @@ const productSchema = new mongoose.Schema({
   quantity: { type: Number, default: 0 },
   
 
-  rating: {
-    average: { type: Number, default: 0, min: 0, max: 5 },},
+  rating: { type: Number, default: 0, min: 0, max: 5 },
 
   status: { type: String, enum: ["Available", "Sold Out"], default: "Available" },
 

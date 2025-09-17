@@ -12,17 +12,6 @@ const categorySchema = new mongoose.Schema({
     unique: true,
     lowercase: true
   },
-  description: {
-    type: String
-  },
-  parent: { 
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-    default: null
-  },
-  image: { 
-    type: String
-  },
   status: {
     type: String,
     enum: ["Active", "Inactive"],

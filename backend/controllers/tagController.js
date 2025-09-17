@@ -1,4 +1,5 @@
 import Tag from "../schema/tagsSchema.js";
+import slugify from "slugify"
 
 // Get all Tags
 export const getAllTags = async (req, res) => {
@@ -34,10 +35,11 @@ export const getTag = async (req, res) => {
 
 // Add Tag
 export const addTag = async (req, res) => {
+
   try {
     const newTag = new Tag({
       name: req.body.name,
-      slug: req.body.slug,
+      slug: slugify(req.body.name, { lower: true }),
       description: req.body.description,
       status: req.body.status
     });
@@ -53,7 +55,11 @@ export const addTag = async (req, res) => {
 export const updateTag = async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedTag = await Tag.findByIdAndUpdate(id, req.body, { new: true });
+    const updateData = {...req.body}
+    if (updateData.name){
+      updateData.slug = slugify(updateData.name)
+    }
+    const updatedTag = await Tag.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!updatedTag) {
       return res.status(404).json({ status: "Error", data: "Tag Not Found" });

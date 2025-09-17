@@ -12,9 +12,6 @@ const tagSchema = new mongoose.Schema({
     unique: true,
     lowercase: true
   },
-  description: {
-    type: String
-  },
   status: {
     type: String,
     enum: ["Active", "Inactive"],

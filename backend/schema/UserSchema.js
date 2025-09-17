@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
@@ -29,14 +29,7 @@ const userSchema = new mongoose.Schema(
     },
     confirmPassword: {
       type: String,
-      required: true,
-      validate: {
-        // This only runs on CREATE and SAVE!
-        validator: function (el) {
-          return el === this.password;
-        },
-        message: "Passwords do not match!",
-      },
+      select: false,
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
@@ -61,7 +54,10 @@ const userSchema = new mongoose.Schema(
       country: String,
       postalCode: String,
     },
-    phoneNumber: String,
+    phoneNumber: {
+      type: String,
+      match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"],
+    },
   },
   { timestamps: true }
 );
@@ -105,7 +101,7 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 mins
 
   return resetToken;
-}
+};
 
 userSchema.methods.createEmailVerificationToken = function () {
   const verificationToken = crypto.randomBytes(32).toString("hex");
@@ -120,6 +116,11 @@ userSchema.methods.createEmailVerificationToken = function () {
   return verificationToken; // send raw token via email
 };
 
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password") || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000; // Subtract 1s so token is always issued after
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 export default User;
