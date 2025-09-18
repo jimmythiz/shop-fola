@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import cookieParser from 'cookie-parser'
 
+dotenv.config();
 // Routes
 import cartRouter from "./routes/cartRoute.js";
 import categoryRouter from "./routes/categoryRoutes.js";
@@ -15,7 +16,6 @@ import authRouter from "./routes/authRouter.js";
 import dashboardRouter from "./routes/dashboard.js";
 
 
-dotenv.config();
 
 const app = express();
 app.use(express.json());

@@ -1,8 +1,9 @@
 import "./Products.css";
 import { CiSearch } from "react-icons/ci";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { fetchProducts } from "../../../lib/fetchData";
 import { Link } from "react-router-dom";
+import { DataContext } from "../../../lib/Context/DataContext";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -11,28 +12,38 @@ const Products = () => {
   const [priceQuery, setPriceQuery] = useState("");
   const [categoryQuery, setCategoryQuery] = useState("");
 
+  const data = useContext(DataContext);
+
+  // Fetch products
   useEffect(() => {
     const controller = new AbortController();
 
-    const fetchproducts = async () => {
+    const fetchProductsData = async () => {
       try {
-        const data = await fetchProducts(controller.signal);
-        setProducts(data.data || data); // adjust to backend response
+        const res = await fetchProducts(controller.signal);
+        setProducts(res.data || res); 
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchproducts();
+    fetchProductsData();
     return () => controller.abort();
   }, []);
+
+  // ---- Debounced search ----
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearch(searchQuery), 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // ---- Filtering ----
   let filteredProducts = [...products];
 
-  if (searchQuery) {
+  if (debouncedSearch) {
     filteredProducts = filteredProducts.filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
 
@@ -43,18 +54,18 @@ const Products = () => {
     );
   }
 
-  if (priceQuery === "High - Low") {
-    filteredProducts.sort((a, b) => b.price - a.price);
-  } else if (priceQuery === "Low - High") {
-    filteredProducts.sort((a, b) => a.price - b.price);
-  }
-
   if (categoryQuery) {
     filteredProducts = filteredProducts.filter((product) =>
       product.category_id?.some(
         (cat) => cat.name.toLowerCase() === categoryQuery.toLowerCase()
       )
     );
+  }
+
+  if (priceQuery === "High - Low") {
+    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+  } else if (priceQuery === "Low - High") {
+    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
   }
 
   // ---- Render ----
@@ -64,17 +75,17 @@ const Products = () => {
 
       {/* Search + Filters */}
       <div className="product-search">
+        <CiSearch className="search-icon" />
         <input
           type="text"
           placeholder="Search Product"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <CiSearch />
       </div>
 
       <label>
-        Filter By Availability :
+        Filter By Availability:
         <select
           value={availabilityQuery}
           onChange={(e) => setAvailabilityQuery(e.target.value)}
@@ -86,11 +97,8 @@ const Products = () => {
       </label>
 
       <label>
-        Filter By Price :
-        <select
-          value={priceQuery}
-          onChange={(e) => setPriceQuery(e.target.value)}
-        >
+        Filter By Price:
+        <select value={priceQuery} onChange={(e) => setPriceQuery(e.target.value)}>
           <option value="">All</option>
           <option value="High - Low">High - Low</option>
           <option value="Low - High">Low - High</option>
@@ -98,17 +106,17 @@ const Products = () => {
       </label>
 
       <label>
-        Filter By Category :
+        Filter By Category:
         <select
           value={categoryQuery}
           onChange={(e) => setCategoryQuery(e.target.value)}
         >
           <option value="">All</option>
-          {/* ideally populate this dynamically from backend */}
-          <option value="Phones">Phones</option>
-          <option value="Men">Men</option>
-          <option value="Women">Women</option>
-          <option value="Children">Children</option>
+          {data.categories?.map((cat) => (
+            <option key={cat._id} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
         </select>
       </label>
 
@@ -127,13 +135,11 @@ const Products = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product._id} className="product-grid-list">
-              
-                <img
-                  src={product.images?.[0] || "/placeholder.png"}
-                  alt={product.name}
-                />
-                <p>{product.name}</p>
-              
+              <img
+                src={product.images?.[0] || "/placeholder.png"}
+                alt={product.name}
+              />
+              <p>{product.name}</p>
               <p>
                 {product.category_id?.length > 0
                   ? product.category_id.map((cat) => cat.name).join(", ")
@@ -141,7 +147,9 @@ const Products = () => {
               </p>
               <p>${product.price}</p>
               <p>{product.status}</p>
-              <Link to={`/products/${product._id}`}>Edit</Link>
+              <Link to={`/products/${product._id}`} className="edit-btn">
+                Edit
+              </Link>
             </div>
           ))
         ) : (

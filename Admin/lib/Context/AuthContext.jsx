@@ -18,10 +18,10 @@ export const AuthProvider = ({ children }) => {
         const { data } = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`,
           {},
-          { withCredentials: true } // sends cookie automatically
+          { withCredentials: true } 
         );
         setAccessToken(data.accessToken);
-        setUser(data.user || user); // if backend sends user
+        setUser(data.user || user); 
         if (data.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
         }

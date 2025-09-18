@@ -1,106 +1,158 @@
-/* EditProduct.css */
-
-.edit-product-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.edit-product-container h1 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #333;
-}
-
-form {
+/* Add these styles to your EditProduct.css file */
+.edit-product-container form{
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+}
+.edit-product-container form div{
+  display: flex;
+  flex-direction: column;
+}
+.dynamic-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
 }
 
-label {
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  color: #555;
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-input[type="text"],
-input[type="number"],
-textarea,
-select {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border 0.2s ease;
+.input-group input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-select:focus {
-  border-color: #4a90e2;
+.input-group input:focus {
   outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-textarea {
-  resize: vertical;
+.remove-btn {
+  padding: 8px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.add-btn {
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  align-self: flex-start;
+  margin-top: 5px;
+}
+
+.add-btn:hover {
+  background-color: #218838;
+}
+
+.existing-images,
+.new-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.image-item img {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-item button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.image-item button:hover {
+  background-color: #c82333;
+}
+
+.new-images-preview {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+}
+
+.new-images-preview p {
+  margin: 0 0 10px 0;
+  font-weight: 500;
+  color: #1976d2;
 }
 
 fieldset {
   border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 10px;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
 }
 
-legend {
-  font-weight: 700;
-  color: #333;
+fieldset legend {
+  font-weight: 600;
+  color: #495057;
+  padding: 0 10px;
 }
 
-fieldset label {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-fieldset input[type="checkbox"] {
-  margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
-}
-
-button[type="submit"] {
-  padding: 0.8rem 1.5rem;
-  background-color: #4a90e2;
-  color: #fff;
-  font-weight: 700;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease;
-  align-self: flex-start;
-}
-
-button[type="submit"]:hover {
-  background-color: #357ab8;
-}
-
+/* Responsive design */
 @media (max-width: 768px) {
-  .edit-product-container {
-    padding: 1.2rem;
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
   }
-
-  fieldset label {
-    display: block;
-    margin-bottom: 0.5rem;
+  
+  .input-group input {
+    margin-bottom: 5px;
+  }
+  
+  .existing-images,
+  .new-images {
+    justify-content: center;
   }
 }
