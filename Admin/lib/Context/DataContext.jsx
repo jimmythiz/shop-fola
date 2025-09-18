@@ -1,33 +1,36 @@
-import React, { createContext, useState, useEffect } from "react";
+// lib/Context/DataContext.jsx
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
-// Create Context
 export const DataContext = createContext();
 
-// Provider Component
 export const DataProvider = ({ children }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [catRes, tagRes] = await Promise.all([
+        axios.get(`${API_URL}/api/categories`),
+        axios.get(`${API_URL}/api/tags`),
+      ]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [catRes, tagRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/api/categories"),
-          axios.get("http://127.0.0.1:8000/api/tags"),
-        ]);
+      // adjust depending on your API shape
+      setCategories(Array.isArray(catRes.data) ? catRes.data : catRes.data.data || []);
+      setTags(Array.isArray(tagRes.data) ? tagRes.data : tagRes.data.data || []);
+    } catch (error) {
+      console.error("Error fetching categories/tags:", error);
+      setCategories([]);
+      setTags([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setCategories(Array.isArray(catRes.data.data) ? catRes.data.data : []);
-        setTags(Array.isArray(tagRes.data.data) ? tagRes.data.data : []);
-      } catch (err) {
-        console.error("Error fetching categories/tags:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
 
   return (
     <DataContext.Provider value={{ categories, tags, loading }}>

@@ -135,40 +135,6 @@ export const verifyAccount = async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
-
-export const logIn = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required." });
-    }
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
-    if (!user.isVerified) {
-      return res
-        .status(401)
-        .json({
-          message: "Please verify your email to activate your account.",
-        });
-    }
-    const token = signToken(user._id);
-    res
-      .status(200)
-      .header("Authorization", `Bearer ${token}`)
-      .json({ message: "Login successful.",
-        token,
-        user: { id: user._id, email: user.email, username: user.username } });
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
 export const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;

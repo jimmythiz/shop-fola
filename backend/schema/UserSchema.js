@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: Date,
     emailVerificationToken: String,
     emailVerificationExpires: Date,
+    refreshToken: { type: String, default: null },
     profilePic: {
       type: String,
       default: "https://via.placeholder.com/150",

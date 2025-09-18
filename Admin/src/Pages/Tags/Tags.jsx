@@ -1,24 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Tags.css"; // shared styling
+import { useAuth } from "../../../lib/Context/AuthContext"; // ✅ import auth context
+import "./Tags.css";
 
 const AddTag = () => {
   const [name, setName] = useState("");
   const [tags, setTags] = useState([]);
+  const { accessToken } = useAuth(); // ✅ get token
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  // Fetch existing tags
+  // Fetch existing tags (no token needed if it's public)
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/tags");
+        const res = await axios.get(`${API_URL}/api/tags`);
         setTags(res.data.data || res.data || []);
-        console.log(res.data);
       } catch (err) {
         console.error("Error fetching tags:", err);
       }
     };
     fetchTags();
-  }, []);
+  }, [API_URL]);
 
   // Submit new tag
   const handleSubmit = async (e) => {
@@ -26,8 +28,14 @@ const AddTag = () => {
     if (!name.trim()) return;
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/tags", { name });
-      setTags(Array.isArray(res.data.data) ? res.data.data : []);
+      const res = await axios.post(
+        `${API_URL}/api/tags`,
+        { name },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }, // ✅ send token
+        }
+      );
+      setTags((prev) => [...prev, res.data]); // assuming backend returns created tag
       setName("");
     } catch (err) {
       console.error("Error adding tag:", err);
@@ -37,8 +45,10 @@ const AddTag = () => {
   // Delete tag
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/tags/${id}`);
-      setTags(tags.filter((t) => t._id !== id));
+      await axios.delete(`${API_URL}/api/tags/${id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }, // ✅ send token
+      });
+      setTags((prev) => prev.filter((t) => t._id !== id));
     } catch (err) {
       console.error("Error deleting tag:", err);
     }
@@ -55,7 +65,9 @@ const AddTag = () => {
           onChange={(e) => setName(e.target.value)}
           className="input-field"
         />
-        <button type="submit" className="submit-btn">Add</button>
+        <button type="submit" className="submit-btn">
+          Add
+        </button>
       </form>
 
       {tags.length === 0 ? (
@@ -65,7 +77,12 @@ const AddTag = () => {
           {tags.map((tag) => (
             <li key={tag._id}>
               {tag.name}
-              <button onClick={() => handleDelete(tag._id)} className="delete-btn">x</button>
+              <button
+                onClick={() => handleDelete(tag._id)}
+                className="delete-btn"
+              >
+                x
+              </button>
             </li>
           ))}
         </ul>

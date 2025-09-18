@@ -1,65 +1,87 @@
-.users-container{
+.users-container {
     padding: 1.5rem;
-    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
-.users-container h3{
+
+.users-container h3 {
     border-bottom: 2px solid gray;
     padding: 10px 0 5px 0;
-    margin-bottom: 25px;
+    margin-bottom: 1.5rem;
     font-size: 24px;
 }
-.users-container .users-search{
+
+.users-container .users-search {
     position: relative;
-    width: 250px;
-    border: .4px solid gray;
+    max-width: 300px;
+    width: 100%;
+    border: 0.4px solid gray;
     border-radius: 5px;
     padding: 2px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
-.users-container .users-search input{
-    padding: .5rem 40px .5rem .5rem;
+
+.users-container .users-search input {
+    padding: 0.5rem 40px 0.5rem 0.8rem;
     font-size: 16px;
     outline: none;
     border: none;
+    width: 100%;
 }
-.users-container .users-search svg{
-    font-size: 40px;
+
+.users-container .users-search svg {
+    font-size: 28px;
     position: absolute;
-    right: 0px;
-    top: 0;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
+    color: gray;
 }
-.users-container .users-grid{
-    height: 70vh;
-    overflow-y: scroll;
+
+.users-container .users-grid {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 200px;
 }
-.users-container .users-header{
+
+.users-container .users-header {
     display: grid;
-    grid-template-columns: 40% repeat(2,25%);
-    border-bottom: .4px solid gray;
+    grid-template-columns: 30% 20% 30% 20%;
+    border-bottom: 0.4px solid gray;
+    padding-bottom: 0.5rem;
 }
-.users-container .users-header p{
+
+.users-container .users-header p {
     font-size: 18px;
     font-weight: 700;
 }
-.users-container .users-grid-list{
+
+.users-container .users-grid-list {
     display: grid;
-    grid-template-columns: 40% repeat(2,25%);
-    border-bottom: .4px solid gray;
-    padding: 1rem 0;
-    margin-top: .6rem;
+    grid-template-columns: 30% 20% 20% 20%;
+    border-bottom: 0.4px solid gray;
+    padding: 0.8rem 0;
     align-items: center;
+    gap: 0.5rem;
 }
-.users-container .users-grid-list div{
+
+.users-container .users-grid-list div {
     display: flex;
     gap: 10px;
     align-items: center;
 }
-.users-container .users-grid-list div img{
+
+.users-container .users-grid-list div img {
     height: 50px;
     width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-.users-container .users-grid-list button{
+
+.users-container .users-grid-list button {
     background-color: greenyellow;
     width: 100px;
     border: none;
@@ -67,4 +89,45 @@
     cursor: pointer;
     height: 40px;
     border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.users-container .users-grid-list button:hover {
+    background-color: limegreen;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .users-container .users-header,
+    .users-container .users-grid-list {
+        grid-template-columns: 50% 50%;
+    }
+
+    .users-container .users-grid-list button {
+        width: 90%;
+        margin-top: 0.5rem;
+    }
+
+    .users-container .users-grid-list div img {
+        height: 40px;
+        width: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .users-container .users-header,
+    .users-container .users-grid-list {
+        grid-template-columns: 1fr;
+        text-align: center;
+        row-gap: 0.5rem;
+    }
+
+    .users-container .users-grid-list div {
+        justify-content: center;
+    }
+
+    .users-container .users-grid-list button {
+        width: 100%;
+    }
 }

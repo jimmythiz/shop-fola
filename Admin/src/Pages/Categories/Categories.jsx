@@ -1,23 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Categories.css"; // shared styling
+import { useAuth } from "../../../lib/Context/AuthContext"; // ✅ import context
+import "./Categories.css";
 
 const AddCategory = () => {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
+  const { accessToken } = useAuth(); // ✅ get token
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch existing categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/categories");
+        const res = await axios.get(`${API_URL}/api/categories`);
         setCategories(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
     };
     fetchCategories();
-  }, []);
+  }, [API_URL]);
 
   // Handle submit
   const handleSubmit = async (e) => {
@@ -25,19 +28,27 @@ const AddCategory = () => {
     if (!name.trim()) return;
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/categories", { name });
-      setCategories([...categories, res.data.data]); // add new one
-      setName(""); // reset input
+      const res = await axios.post(
+        `${API_URL}/api/categories`,
+        { name },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }, // ✅ secure
+        }
+      );
+      setCategories((prev) => [...prev, res.data.data]); // add new category
+      setName("");
     } catch (err) {
       console.error("Error adding category:", err);
     }
   };
 
-  // Optional delete
+  // Handle delete
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/categories/${id}`);
-      setCategories(categories.filter((c) => c._id !== id));
+      await axios.delete(`${API_URL}/api/categories/${id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }, // ✅ secure
+      });
+      setCategories((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       console.error("Error deleting category:", err);
     }
@@ -54,7 +65,9 @@ const AddCategory = () => {
           onChange={(e) => setName(e.target.value)}
           className="input-field"
         />
-        <button type="submit" className="submit-btn">Add</button>
+        <button type="submit" className="submit-btn">
+          Add
+        </button>
       </form>
       {categories.length === 0 ? (
         <p>No categories available</p>
@@ -63,7 +76,12 @@ const AddCategory = () => {
           {categories.map((cat) => (
             <li key={cat._id}>
               {cat.name}
-              <button onClick={() => handleDelete(cat._id)} className="delete-btn">x</button>
+              <button
+                onClick={() => handleDelete(cat._id)}
+                className="delete-btn"
+              >
+                x
+              </button>
             </li>
           ))}
         </ul>

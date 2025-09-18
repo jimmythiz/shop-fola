@@ -1,10 +1,13 @@
-import {  useState,useContext } from "react";
-import { DataContext } from "../../../lib/Context/DataContext";
-import "./AddProducts.css";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import "./AddProducts.css";
 
 const AddProducts = () => {
-  const { categories, tags, loading } = useContext(DataContext);
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -18,6 +21,27 @@ const AddProducts = () => {
     rating: "",
     images: [],
   });
+
+  // Fetch categories and tags from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [catRes, tagRes] = await Promise.all([
+          axios.get(`${API_URL}/api/categories`),
+          axios.get(`${API_URL}/api/tags`),
+        ]);
+        setCategories(catRes.data.data);
+        setTags(tagRes.data.data);
+        console.log(tagRes.data.data,catRes.data.data)
+      } catch (error) {
+        console.error("Error fetching categories/tags:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -57,11 +81,12 @@ const AddProducts = () => {
     formData.images.forEach((file) => data.append("images", file));
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/products", data, {
+      const res = await axios.post(`${API_URL}/api/products`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Product Created:", res.data);
-      // Reset form if needed
+
+      // Reset form
       setFormData({
         name: "",
         description: "",
@@ -79,6 +104,8 @@ const AddProducts = () => {
       console.error("Error:", err);
     }
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="add-product-container">

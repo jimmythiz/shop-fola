@@ -6,13 +6,14 @@ import {
   updateCategory,
   deleteCategory
 } from "../controllers/CategoryController.js";
+import { isAdmin, isAuthenticated } from "../middleware/authMiddleware.js";
 
 const categoryRouter = express.Router();
 
 categoryRouter.get("/", getAllCategories);
 categoryRouter.get("/:id", getCategory);
-categoryRouter.post("/", addCategory);
-categoryRouter.put("/:id", updateCategory);
-categoryRouter.delete("/:id", deleteCategory);
+categoryRouter.post("/",isAuthenticated, isAdmin, addCategory);
+categoryRouter.put("/:id",isAuthenticated, isAdmin, updateCategory);
+categoryRouter.delete("/:id",isAuthenticated, isAdmin, deleteCategory);
 
 export default categoryRouter;

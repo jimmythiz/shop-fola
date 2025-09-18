@@ -6,12 +6,12 @@ import {
   updateCart,
   deleteCart,
 } from "../controllers/cartController.js";
-import { isAuthenticated } from "../middleware/authMiddleware.js";
+import { isAdmin, isAuthenticated } from "../middleware/authMiddleware.js";
 
 const cartRouter = express.Router();
 
 // ADMIN: Get all carts
-cartRouter.get("/all-carts", getAllCarts);
+cartRouter.get("/all-carts",isAuthenticated,isAdmin, getAllCarts);
 
 // USER ROUTES: use JWT, no userId param
 cartRouter.get("/my-cart", isAuthenticated, getCart);
