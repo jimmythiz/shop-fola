@@ -81,18 +81,22 @@
     object-fit: cover;
 }
 
-.users-container .users-grid-list button {
+.users-container .users-grid-list a {
     background-color: greenyellow;
-    width: 100px;
+    width: fit-content;
     border: none;
     outline: none;
     cursor: pointer;
     height: 40px;
     border-radius: 5px;
     transition: all 0.3s ease;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    padding: .7rem 2rem;
 }
 
-.users-container .users-grid-list button:hover {
+.users-container .users-grid-list a:hover {
     background-color: limegreen;
     color: white;
 }

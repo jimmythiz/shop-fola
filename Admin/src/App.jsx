@@ -11,10 +11,13 @@ import Users from "../src/Pages/Users/Users"
 import Login from "../src/Pages/Login/Login"
 import AddProducts from "../src/Pages/AddProducts/AddProducts"
 import Orders from './Pages/Orders/Orders';
+import OrderDetails from './Pages/ViewOrder/ViewOrder';
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute"
 import EditProduct from './Pages/EditProduct/EditProduct';
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from '../lib/Context/AuthContext';
+import UserDetails from './Pages/UserDetails/Userdetails';
 
 function App() {
    const { isLoggedIn } = useAuth();
@@ -23,6 +26,7 @@ function App() {
 
   return (
     <>
+    <ToastContainer position="top-right" autoClose={2000} />
       <BrowserRouter>
       <div className='app-container'>
         {isLoggedIn && <Navbar />}
@@ -67,12 +71,25 @@ function App() {
               <Users />
               </ProtectedRoute>
           } />
+          
+          <Route path="/users/:id" element={
+            <ProtectedRoute>
+              <UserDetails />
+              </ProtectedRoute>
+          } />
 
           <Route path="/orders" element={
             <ProtectedRoute>
               <Orders />
               </ProtectedRoute>
           } />
+          <Route path="/orders/:id" element={
+            <ProtectedRoute>
+              <OrderDetails />
+              </ProtectedRoute>
+          } />
+          
+        
         </Routes>
         </div>
       </BrowserRouter>

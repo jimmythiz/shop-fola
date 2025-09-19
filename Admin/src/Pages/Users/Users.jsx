@@ -1,29 +1,52 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { CiSearch } from "react-icons/ci";
-import blob from "../../../src/assets/blob.svg";
 import { useAuth } from "../../../lib/Context/AuthContext";
 import "./Users.css";
+import { Link } from "react-router";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
   const { accessToken } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Fetch users
+  // Debounced fetch
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/api/users`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        setUsers(res.data.data || res.data || []);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-      }
-    };
-    fetchUsers();
-  }, [API_URL, accessToken]);
+    const delayDebounce = setTimeout(() => {
+      const fetchUsers = async () => {
+        try {
+          setLoading(true);
+          const res = await axios.get(
+            `${API_URL}/api/users?search=${encodeURIComponent(search)}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+          setUsers(res.data.data || res.data || []);
+        } catch (err) {
+          console.error("Error fetching users:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchUsers();
+    }, 600); // 600ms debounce delay
+
+    return () => clearTimeout(delayDebounce);
+  }, [search, API_URL, accessToken]);
+
+  // ✅ Use local filter on top of server response (optional double filter)
+  const filteredUsers = users.filter((user) => {
+    const fullName = `${user.firstname} ${user.lastname}`.toLowerCase();
+    return (
+      fullName.includes(search.toLowerCase()) ||
+      user.username?.toLowerCase().includes(search.toLowerCase()) ||
+      user._id?.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   return (
     <div className="users-container">
@@ -31,7 +54,12 @@ const Users = () => {
 
       {/* Search */}
       <div className="users-search">
-        <input type="text" placeholder="Search User" />
+        <input
+          type="text"
+          placeholder="Search User"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <CiSearch />
       </div>
 
@@ -39,23 +67,23 @@ const Users = () => {
       <div className="users-header">
         <p>Customer Name</p>
         <p>Customer Username</p>
-        <p>Customer ID</p>
         <p>Action</p>
       </div>
 
       {/* Users List */}
       <div className="users-grid">
-        {users.length === 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : filteredUsers.length === 0 ? (
           <p>No users found</p>
         ) : (
-          users.map((user) => (
+          filteredUsers.map((user) => (
             <div className="users-grid-list" key={user._id}>
               <div>
-                <p>{user.firstname + " " +user.lastname}</p>
+                <p>{user.firstname + " " + user.lastname}</p>
               </div>
               <p>{user.username}</p>
-              <p>{user._id}</p>
-              <button>View Orders</button>
+              <Link to={`/users/${user._id}`}>User Details</Link>
             </div>
           ))
         )}

@@ -3,11 +3,13 @@ import { CiSearch } from "react-icons/ci";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../lib/Context/AuthContext"; // if you’re using auth context
+import { Link } from "react-router";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [filterStatus, setFilterStatus] = useState("");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { accessToken } = useAuth(); // ⬅️ get token for auth
   const API_URL = import.meta.env.VITE_API_URL;
@@ -26,17 +28,19 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setLoading(true)
         const res = await axios.get(`${API_URL}/api/orders/admin/orders`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
           withCredentials: true,
         });
-        setOrders(res.data.data); // assuming backend returns array of orders
-        console.log(res.data)
+        setOrders(res.data.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
-      }
+      }finally {
+      setLoading(false);
+    }
     };
 
     if (accessToken) {
@@ -95,8 +99,9 @@ const Orders = () => {
         <p>Action</p>
       </div>
 
-      {/* Orders List */}
+      {loading ? <p>Loading</p> :
       <div className="orders-grid">
+
         {filteredOrders.map((order, index) => {
           const color = statusColors[order.orderStatus] || "#999";
           return (
@@ -125,11 +130,13 @@ const Orders = () => {
                 <p>{order.orderStatus}</p>
               </div>
 
-              <button>View</button>
+              <Link to={`/orders/${order._id}`}>View</Link>
             </div>
           );
         })}
-      </div>
+      
+        </div>
+}
     </div>
   );
 };

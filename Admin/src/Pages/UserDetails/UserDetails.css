@@ -1,0 +1,80 @@
+.user-details-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  color: #0056b3;
+}
+
+.user-card {
+  text-align: center;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.username {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.role {
+  background: #f0f4ff;
+  color: #004085;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.user-info {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.user-info h3 {
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.user-info p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-card, .user-info {
+    padding: 15px;
+  }
+
+  .user-avatar {
+    width: 90px;
+    height: 90px;
+  }
+}
