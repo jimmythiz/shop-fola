@@ -13,7 +13,7 @@ const { data, isLoading, error } = context;
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading content</p>;
     if (!data || data.length === 0) return <p>No Promo Items At The Moment</p>;
-     const promoImage = data[18]?.images?.[0] ;
+     const promoImage = data[0]?.images?.[0] ;
     return (
     <div className="advert-container">
         <div className="advert-text">

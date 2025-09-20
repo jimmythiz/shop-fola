@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  slug: { type: String, unique: true }, // SEO-friendly URL
+  slug: { type: String, unique: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
   
@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema({
     ref: "Tag"
   }],
 
-  size: [{ type: String }], // <-- array of strings
+  size: [{ type: String }],
   color: [{ type: String }], 
 
 

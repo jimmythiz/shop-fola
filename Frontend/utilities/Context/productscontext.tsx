@@ -3,8 +3,26 @@ import type { ReactNode } from "react";
 
 import useFetch from "../fetchdata";
 
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  category_id: string[];
+  tag_ids: string[];
+  size: string[];
+  color: string[];
+  quantity: number;
+  rating: number;
+  status: "Available" | "Sold Out";
+  images: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ProductContextType {
-  data: any[]; // Replace `any` with a specific Product type if you have it
+  data: Product[];
   isLoading: boolean;
   error: any;
 }

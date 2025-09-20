@@ -14,6 +14,7 @@ const BestSellingSection = () => {
     }
    
   const { data, isLoading, error } = context;
+   const products = data?.data || []; 
     const scrollRef = useRef<HTMLDivElement>(null);
     const details = {
         title:"This Month",
@@ -25,14 +26,14 @@ const BestSellingSection = () => {
     
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading content</p>;
-    if (!data || data.length === 0) return <p>No items to display</p>;
+    if (!products || products.length === 0) return <p>No items to display</p>;
    
   return (
     <div className='best-selling-category-container'>
         <SectionHeaders details={details}/>
         <div className="best-selling-scroller" ref={scrollRef}>
-          {data.map((item)=>(
-            <Link to={`/products/${item.id}`} key={item.id}>
+          {products.map((item)=>(
+            <Link to={`/products/${item._id}`} key={item._id}>
               <ProductsCard singleItem={item}/>
             </Link>
             ))}

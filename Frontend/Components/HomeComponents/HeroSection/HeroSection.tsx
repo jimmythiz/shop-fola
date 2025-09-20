@@ -12,8 +12,9 @@ const HeroSection = () => {
   }
  
 const { data, isLoading, error } = context;
+ const products = data?.data || []; 
 
-    const firstThree = data
+    const firstThree = products
         .filter(item => item.images[0]?.startsWith("http"))
         .slice(0,3)
     const [imageIndex,setimageIndex] = useState(0)
@@ -49,20 +50,20 @@ const { data, isLoading, error } = context;
         </div>
         <div className="hero-section-corousel">
             <div className="hero-corousel-top">
-                <div key={currentItem.id} className="hero-corousel-slide">
+                <div key={currentItem._id} className="hero-corousel-slide">
                     <div className="hero-corousel-text">
-                        <p>{currentItem.title}</p>
+                        <p>{currentItem.name}</p>
                         <h1>Up To 10% Voucher</h1>
                         <p>Shop Now <FaArrowRightLong /></p>
                     </div>
                     <div className="hero-corousel-image">
-                        <img src={currentItem.category.image} alt={currentItem.title} />
+                        <img src={currentItem.images[0]} alt={currentItem.name} />
                     </div>
                 </div>
             </div>
             <div className="hero-corousel-dots">
                 {firstThree.map((item,index)=>(
-                    <span onClick={()=>handleDotClick(index)} key={item.id} className={`dot ${index ===imageIndex ? "active" : ""}`}></span>
+                    <span onClick={()=>handleDotClick(index)} key={item._id} className={`dot ${index ===imageIndex ? "active" : ""}`}></span>
                 ))}
             </div>
         </div>
