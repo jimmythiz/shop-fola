@@ -50,7 +50,7 @@
     border: none;
     width: 143px;
 }
-.log-in-content form .already-have{
+.log-in-content .form-bottom .already-have{
     font-size: 16px;
     text-align: center;
     color: #DB4444;

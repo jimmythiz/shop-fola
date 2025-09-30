@@ -1,151 +1,109 @@
-.hero-section-container{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0 5rem 0;
-    border-bottom: #ccc 2px solid;
-    margin-top: -3rem;
+.hero-section-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 5rem 0;
+  border-bottom: #ccc 2px solid;
+  margin-top: -3rem;
 }
-.hero-section-links{
-    border-right: 2px solid #828282;
-    padding: .5rem 5rem 0 0 ;
+
+.hero-section-links {
+  border-right: 2px solid #828282;
+  padding: .5rem 5rem 0 0;
 }
-.hero-section-links ul{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+
+/* carousel area */
+.hero-section-corousel {
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 450px; /* Changed from min-height to height */
+  padding: 3rem;
+  margin-left: 5rem;
+  position: relative;
 }
-.hero-section-links ul li{
-    list-style-type: none;
-    cursor: pointer;
-    font-weight: 300;
+
+/* container for absolutely positioned slides */
+.hero-corousel-top {
+  position: relative;
+  width: 100%;
+  height: 350px; /* Give explicit height instead of 100% */
+  overflow: hidden;
 }
-.hero-section-corousel{
-    background-color: black;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 450px;
-    padding: 3rem;
-    margin-left: 5rem;
+
+/* each slide covers the full area and is flex for text + image */
+.hero-corousel-slide {
+  position: absolute;
+  inset: 0;               /* top:0; right:0; bottom:0; left:0; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateX(0); /* Start at normal position */
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;   /* prevent interaction when not active */
+  visibility: hidden;     /* hide non-active from assistive tech */
 }
-.hero-corousel-top{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    overflow: hidden;
+
+/* active slide visible + interactive */
+.hero-corousel-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  visibility: visible;
 }
-.hero-corousel-slide{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 5rem;
-    
+
+/* slide content */
+.hero-corousel-text {
+  max-width: 55%;
 }
-.hero-corousel-image img{
-    width: 300px;
-    height: auto;
-     max-width: 100%;
-    object-fit: contain;
-    border-radius: 8px;
+.hero-corousel-text p {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
 }
-.hero-corousel-text p{
-    display: flex;
-    align-items: center;
-    gap: .6rem;
+.hero-corousel-image img {
+  width: 300px;
+  max-width: 40%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  position: absolute;
+   top: 0;
+  bottom: 0;
+  right: 50px;
+  margin: auto; 
+}
+
+/* dots */
+.hero-corousel-dots {
+  margin-top: 1.5rem;
 }
 .dot {
   height: 10px;
   width: 10px;
   margin: 0 5px;
-  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
   border-radius: 50%;
   display: inline-block;
   transition: background 0.3s ease;
   cursor: pointer;
+  border: none;
 }
-
 .dot.active {
-  background-color: #333;
+  background-color: white; /* White for better visibility */
 }
 
-
-/* -------------------- Responsive -------------------- */
-@media (max-width: 1024px) {
-  .hero-section-corousel{
-    margin-left: 0;
-  }
-  .hero-section-container {
-    flex-direction: column;
-    padding: 0 0 3rem 0;
-    gap: 2rem;
-  }
-  .hero-section-links {
-    border-right: none;
-    border-bottom: 2px solid #828282;
-    padding: 0 0 1rem 0;
-    width: 100%;
-  }
-  .hero-section-links ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-corousel-slide {
-    flex-direction: column; /* stack text above image */
-    gap: 1.5rem;
-    text-align: center;
-  }
-  .hero-corousel-text h1 {
-    font-size: 1.5rem;
-    text-align: start;
-  }
-  .hero-corousel-text p {
-    font-size: 0.9rem;
-  }
-  .hero-corousel-image img {
-    width: 280px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-section-container {
-    padding: 0 0 2rem 0;
-  }
-  .hero-corousel-slide{
-    margin: 0;
-    width: 85%;
-  }
-  .hero-corousel-text{
-    margin: 0;
-    width: 100%;
-  }
-  .hero-section-corousel{
-    padding: 0rem;
-  }
-  .hero-corousel {
-    padding: 1rem;
-  }
-  .hero-corousel-text h1 {
-    font-size: 1.2rem;
-  }
-  .hero-corousel-image img {
-    width: 280px;
-  }
-  .hero-section-links ul {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  
-  .hero-section-links {
+/* Responsive tweaks */
+@media (max-width: 1150px) {
+  .hero-section-container{
     display: none;
   }
+  
 }

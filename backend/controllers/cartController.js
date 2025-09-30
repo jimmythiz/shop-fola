@@ -25,10 +25,18 @@ const recalcCart = async (cart) => {
 // ✅ Admin: Get all carts
 export const getAllCarts = async (req, res) => {
   try {
-    const carts = await Cart.find()
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const carts = await Cart.find().skip(skip).limit(limit)
       .populate("userId", "username email")
       .populate("items.productId", "name price");
-    res.status(200).json({message : "Success", data : carts});
+         const total = await Cart.countDocuments();
+    res.status(200).json({ message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalProducts: total,
+      carts,});
   } catch (error) {
     res.status(500).json({ message: "Error fetching carts", error: error.message });
   }
@@ -46,7 +54,7 @@ export const getCart = async (req, res) => {
       await cart.save();
     }
 
-    res.status(200).json({message : "Success", data : cart});
+    res.status(200).json({message : "Success",  cart});
   } catch (error) {
     res.status(500).json({ message: "Error fetching cart", error: error.message });
   }
@@ -84,7 +92,7 @@ export const editCart = async (req, res) => {
     await recalcCart(cart);
     await cart.save();
 
-    res.status(200).json({message : "Success", data : cart});
+    res.status(200).json({message : "Success",  cart});
   } catch (error) {
     res.status(500).json({ message: "Error editing cart", error: error.message });
   }
@@ -119,7 +127,7 @@ export const updateCart = async (req, res) => {
       { new: true, upsert: true }
     ).populate("items.productId", "name price");
 
-    res.status(200).json({message : "Success", data : cart});
+    res.status(200).json({message : "Success",  cart});
   } catch (error) {
     res.status(500).json({ message: "Error updating cart", error: error.message });
   }

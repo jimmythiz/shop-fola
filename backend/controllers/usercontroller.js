@@ -15,15 +15,21 @@ const signToken = (id) => {
 };
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const users = await User.find().skip(skip).limit(limit)
+     const total = await User.countDocuments();
     res.status(200).json({
-      status: "Success",
-      data: users,
+      message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalUsers: total,
+      users,
     });
   } catch (error) {
     res.status(400).json({
-      status: "Error",
-      data: error.message,
+      message: error.message,
     });
   }
 };
@@ -37,11 +43,11 @@ export const getSingleUser = async (req, res) => {
 
     res.status(200).json({
       status: "Success",
-      data: user,
+       user,
     });
   } catch (error) {
     res.status(400).json({
-      status: "Error",
+     
       data: error.message,
     });
   }
@@ -103,7 +109,6 @@ export const signUp = async (req, res) => {
       });
   } catch (error) {
     res.status(500).json({ message: "Server error. Please try again later." });
-    console.error(error.message);
   }
 };
 
@@ -131,7 +136,6 @@ export const verifyAccount = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Email verified successfully." });
   } catch (error) {
-    console.error(error.message);
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
@@ -271,7 +275,7 @@ export const updateAccount = async (req, res) => {
       .status(200)
       .json({
         message: "Account updated successfully.",
-        user: userWithoutPassword,
+         userWithoutPassword,
       });
   } catch (error) {
     console.error(error.message);

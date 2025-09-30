@@ -47,7 +47,7 @@ export const createOrder = async (req, res) => {
     cart.totalPrice = 0;
     await cart.save();
 
-    res.status(201).json({ message: "Order placed successfully", order: newOrder });
+    res.status(201).json({ message: "Order placed successfully", newOrder });
   } catch (error) {
     res.status(500).json({ message: "Error creating order", error: error.message });
   }
@@ -56,12 +56,19 @@ export const createOrder = async (req, res) => {
 // ---------------------- GET ALL ORDERS (ADMIN ONLY) ----------------------
 export const getAllOrders = async (req, res) => {
   try {
+     const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
     const orders = await Order.find()
       .populate("user", "username firstname lastname address phoneNumber email")
       .populate("items.product", "name price")
-      .sort({ createdAt: -1 });
-
-    res.status(200).json({message : "All Orders" ,data : orders});
+      .sort({ createdAt: -1 }).skip(skip).limit(limit)
+    const total = await Order.countDocuments();
+    res.status(200).json({message : "All Orders" ,message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalOrder: total,
+      orders,});
   } catch (error) {
     res.status(500).json({ message: "Error fetching orders", error: error.message });
   }
@@ -70,12 +77,19 @@ export const getAllOrders = async (req, res) => {
 // ---------------------- GET USER ORDERS ----------------------
 export const getUserOrders = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
     const userId = req.user.id;
     const orders = await Order.find({ user: userId })
       .populate("items.product", "name price")
-      .sort({ createdAt: -1 });
-
-    res.status(200).json(orders);
+      .sort({ createdAt: -1 }).skip(skip).limit(limit)
+  const total = await Order.countDocuments();
+    res.status(200).json({message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalOrders: total,
+      orders,});
   } catch (error) {
     res.status(500).json({ message: "Error fetching your orders", error: error.message });
   }
@@ -97,7 +111,7 @@ export const getOrderById = async (req, res) => {
       return res.status(403).json({ message: "Forbidden: Access denied" });
     }
 
-    res.status(200).json({message : "Your Order", data : order});
+    res.status(200).json({message : "Your Order", order});
   } catch (error) {
     res.status(500).json({ message: "Error fetching order", error: error.message });
   }

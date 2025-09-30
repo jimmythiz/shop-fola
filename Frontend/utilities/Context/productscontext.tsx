@@ -1,7 +1,6 @@
-import { createContext} from "react";
+import { createContext } from "react";
 import type { ReactNode } from "react";
-
-import useFetch from "../fetchdata";
+import useFetch from "../fetchdata"; 
 
 interface Product {
   _id: string;
@@ -22,24 +21,84 @@ interface Product {
 }
 
 interface ProductContextType {
-  data: Product[];
+  bestSelling: Product[];
+  newSelling: Product[];
+  male: Product[];
+  female: Product[];
+  childrenSell: Product[];
+  trending: Product[];
+  allProducts: Product[]; 
   isLoading: boolean;
   error: any;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
+
 interface ProductProviderProps {
   children: ReactNode;
 }
 
 const ProductContextProvider = ({ children }: ProductProviderProps) => {
-  const { data, error, isLoading } = useFetch(`${import.meta.env.VITE_API_BASE_URL}/products`);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const BASE_URL = `${API_BASE_URL}/products`;
+
+  const { 
+    data: bestSelling, 
+    error: bestSellingError, 
+    isLoading: isBestSellingLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c501f&limit=10`); 
+
+  const { 
+    data: newSelling, 
+    error: newProError, 
+    isLoading: isNewLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c5020&limit=10`); 
+
+  const { 
+    data: male, 
+    error: maleError, 
+    isLoading: isMaleLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c5022&limit=10`); 
+
+  const { 
+    data: female, 
+    error: femaleError, 
+    isLoading: isFemaleLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c5023&limit=10`); 
+  
+  const { 
+    data: childrenSell, 
+    error: childrenError, 
+    isLoading: ischildrenLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c5024&limit=10`); 
+
+  const { 
+    data: trending, 
+    error: trendingError, 
+    isLoading: isTrendingLoading 
+  } = useFetch(`${BASE_URL}?tag_ids=68c2f824527b3fc6d38c5021&limit=10`); 
+
+  const { 
+    data: allProducts, 
+    error: allProductsError, 
+    isLoading: isAllProductsLoading 
+  } = useFetch(BASE_URL);
+
+  const isLoading = isBestSellingLoading || isTrendingLoading || isAllProductsLoading || isFemaleLoading || isMaleLoading || ischildrenLoading || isNewLoading;
+
+  const error = bestSellingError || trendingError || allProductsError || femaleError || maleError || childrenError || newProError;
 
   const contextValue: ProductContextType = {
-    data,
-    isLoading,
-    error
-  };
+  bestSelling: (bestSelling?.products || bestSelling || []),
+  trending: (trending?.products || trending || []),
+  allProducts: (allProducts?.products || allProducts || []), 
+  female: (female?.products || female || []), 
+  male: (male?.products || male || []),
+  childrenSell: (childrenSell?.products || childrenSell || []),
+  newSelling: (newSelling?.products || newSelling || []),
+  isLoading,
+  error
+};
 
   return (
     <ProductContext.Provider value={contextValue}>

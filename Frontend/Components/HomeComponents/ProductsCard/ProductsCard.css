@@ -8,7 +8,7 @@
 .product-card .product-image{
 position: relative;
   width: fit-content;
-  height: auto;
+  height: 250px;
   overflow: hidden;
   border-radius: 8px;
 }

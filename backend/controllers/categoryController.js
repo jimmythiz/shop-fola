@@ -4,10 +4,17 @@ import Category from "../schema/categoryModel.js";
 // Get all Categories
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+      const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const categories = await Category.find().skip(skip).limit(limit)
+    const total = await Category.countDocuments();
     res.status(200).json({
-      status: "Success",
-      data: categories,
+      message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalProducts: total,
+      categories,
     });
   } catch (error) {
     res.status(500).json({
@@ -27,7 +34,7 @@ export const getCategory = async (req, res) => {
       return res.status(404).json({ status: "Error", message: "Category Not Found" });
     }
 
-    res.status(200).json({ status: "Success", data: category });
+    res.status(200).json({ status: "Success",  category });
   } catch (error) {
     res.status(500).json({ status: "Error", message: error.message });
   }
@@ -44,7 +51,7 @@ export const addCategory = async (req, res) => {
     });
 
     await newCategory.save();
-    res.status(201).json({ status: "Success", message: "Category Added Successfully", data: newCategory });
+    res.status(201).json({ status: "Success", message: "Category Added Successfully",  newCategory });
   } catch (error) {
     res.status(500).json({ status: "Error", message: error.message });
   }
@@ -66,7 +73,7 @@ export const updateCategory = async (req, res) => {
       return res.status(404).json({ status: "Error", message: "Category Not Found" });
     }
 
-    res.status(200).json({ status: "Success", message: "Category Updated Successfully", data: updatedCategory });
+    res.status(200).json({ status: "Success", message: "Category Updated Successfully",  updatedCategory });
   } catch (error) {
     res.status(500).json({ status: "Error", message: error.message });
   }

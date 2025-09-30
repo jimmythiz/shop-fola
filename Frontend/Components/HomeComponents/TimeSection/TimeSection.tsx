@@ -8,15 +8,20 @@ import ProductsCard from "../ProductsCard/ProductsCard";
 import SectionHeaders from "../SectionHeaders/SectionHeaders";
 
 const TimeSection = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
     const context = useContext(ProductContext);
         if (!context) {
         throw new Error("useProductContext must be used within a ProductContextProvider");
       }
      
-    const { data, isLoading, error } = context;
-     const products = data?.data || []; 
+    const { allProducts, isLoading, error } = context;
+     if (isLoading) {
+    return <div>Loading Products... ⏳</div>;
+  }
+  if (error) {
+    return <div>Error loading  products: {error.message} 😞</div>;
+  }
     
-    const scrollRef = useRef<HTMLDivElement>(null);
     const details = {
         title:"Today's",
         type:"Flash Sales",
@@ -33,15 +38,12 @@ const TimeSection = () => {
         scrollRef:scrollRef
     }
 
-
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading content</p>;
-    if (!products || products.length === 0) return <p>No items to display</p>;
+    if (!allProducts || allProducts.length === 0) return <p>No items to display</p>;
   return (
     <div className="time-section-container">
         <SectionHeaders details={details}/>
         <div className="time-section-slider" ref={scrollRef}>
-            {products.map((item)=>(
+            {allProducts.map((item)=>(
             <Link to={`/products/${item._id}`} key={item._id}>
               <ProductsCard key={item._id} singleItem={item}/>
               </Link>

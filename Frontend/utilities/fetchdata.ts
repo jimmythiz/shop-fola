@@ -10,8 +10,8 @@ const useFetch = (baseUrl:string) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(baseUrl);
-        setData(response.data || response.data.data);
-        console.log(response.data.data)
+        setData(response.data.products || response.data);
+        console.log(response.data.products)
       } catch (error) {
         setError(error);
       } finally {

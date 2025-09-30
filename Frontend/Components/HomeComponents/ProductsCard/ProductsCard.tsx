@@ -11,8 +11,7 @@ const ProductsCard = ({singleItem}:ProductsCardProps) => {
   return (
     <div className="product-card">
             <div className="product-image">
-                <img src={singleItem.images[0]} alt={singleItem.
-blob} />
+                <img src={singleItem.images[0]} alt={singleItem.blob} />
                 <span className="product-percent-off">30%</span>
                 <span className="product-view"><LiaEyeSolid /></span>
                 <span className="product-like"><FaHeart /></span>

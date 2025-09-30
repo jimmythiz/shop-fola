@@ -1,5 +1,6 @@
 import User from "../schema/UserSchema.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt"
 import { generateAccessToken, generateRefreshToken } from "../middleware/authMiddleware.js";
 
 // LOGOUT
@@ -56,6 +57,42 @@ export const refreshToken = async (req, res) => {
     return res.status(403).json({ message: "Invalid or expired refresh token" });
   }
 };
+
+export const signUp = async (req,res)=>{
+  try{
+  const { firstname, lastname , username, email , password , confirmPassword , phoneNumber} = req.body;
+  if (!firstname || !lastname || !username|| !email || !password || !confirmPassword || !phoneNumber){
+    return res.status(400).json({ message: "All fields are required." });
+  }
+  if (password !== confirmPassword){
+    return res.status(404).json({message : "Passwords do not match"})
+  }
+  if (await User.findOne({ username })) {
+      return res.status(400).json({ message: "Username is already taken." });
+    }
+    if (await User.findOne({ email })) {
+      return res.status(400).json({ message: "Email is already taken." });
+    }
+    if (await User.findOne({ phoneNumber })) {
+      return res.status(400).json({ message: "Phone number is already taken." });
+    }
+  const hashedPaswword = await bcrypt.hash(password,12)
+    const user = await User.create({
+        firstname ,
+        lastname ,
+        username ,
+        email ,
+        password : hashedPaswword,
+        phoneNumber,
+        isVerified: false,
+    })
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    return res.status(201).json({message : "User Created. Please Verify Your Account With the link sent to your email", user:userWithoutPassword})
+  }catch(error){
+     console.error("Signup error:", error.message);
+    return res.status(500).json({message : "Unable to Sign Up"})
+  }
+}
 
 // LOGIN
 export const logIn = async (req, res) => {

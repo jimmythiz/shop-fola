@@ -6,18 +6,33 @@ import mongoose from "mongoose";
 // Get all Products
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find()
-      .populate("category_id", "name slug")  // only fetch certain fields
-      .populate("tag_ids", "name slug");
-
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const filter = {};
+    
+    if (req.query.category_id) {
+      filter.category_id = req.query.category_id; 
+    }
+    
+    const products = await Product.find(filter)
+      .populate("category_id", "name slug")
+      .populate("tag_ids", "name slug")
+      .skip(skip)
+      .limit(limit);
+      
+    const total = await Product.countDocuments(filter);
+    
     res.status(200).json({
-      status: "Success",
-      data: products
+      message: "Success",
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalProducts: total,
+      products,
     });
   } catch (error) {
     res.status(400).json({
-      status: "Error",
-      data: error.message
+      message: error.message
     });
   }
 };
@@ -33,19 +48,17 @@ export const getProduct = async (req, res) => {
 
     if (!product) {
       return res.status(404).json({
-        status: "Error",
-        data: "Product Not Found"
+        message: "Product Not Found"
       });
     }
 
     res.status(200).json({
       status: "Success",
-      data: product
+       product
     });
   } catch (error) {
     res.status(400).json({
-      status: "Error",
-      data: error.message
+      message: error.message
     });
   }
 };
@@ -86,7 +99,7 @@ export const createProduct = async (req, res) => {
     await product.save();
     res.status(201).json({ message: "Product created successfully", product });
   } catch (error) {
-    res.status(500).json({ message: "Error creating product", error: error.message });
+    res.status(500).json({ message:  error.message });
   }
 };
 
@@ -162,13 +175,11 @@ export const updateProducts = async (req, res) => {
 
     res.status(200).json({
       message: "Product updated successfully",
-      data: product,
+     product,
     });
   } catch (error) {
-    console.error("Error updating product:", error);
     res.status(500).json({
-      message: "Error updating product",
-      error: error.message,
+      message:  error.message,
     });
   }
 };
@@ -181,18 +192,16 @@ export const deleteProducts = async (req, res) => {
 
     if (!product) {
       return res.status(404).json({
-        status: "Error",
-        data: "Product Not Found"
+        message: "Product Not Found"
       });
     }
 
     res.status(200).json({
-      status: "Product Deleted Successfully",
+      message: "Product Deleted Successfully",
     });
   } catch (error) {
     res.status(400).json({
-      status: "Error",
-      data: error.message
+      message: error.message
     });
   }
 };

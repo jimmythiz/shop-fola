@@ -27,9 +27,9 @@ export const getTag = async (req, res) => {
       return res.status(404).json({ status: "Error", data: "Tag Not Found" });
     }
 
-    res.status(200).json({ status: "Success", data: tag });
+    res.status(200).json({ status: "Success",  tag });
   } catch (error) {
-    res.status(400).json({ status: "Error", data: error.message });
+    res.status(400).json({ status: "Error", message : error.message });
   }
 };
 
@@ -45,7 +45,7 @@ export const addTag = async (req, res) => {
     });
 
     await newTag.save();
-    res.status(201).json({ status: "Tag Added Successfully", data: newTag });
+    res.status(201).json({ status: "Tag Added Successfully",  newTag });
   } catch (error) {
     res.status(400).json({ status: "Error", data: error.message });
   }
@@ -65,7 +65,7 @@ export const updateTag = async (req, res) => {
       return res.status(404).json({ status: "Error", data: "Tag Not Found" });
     }
 
-    res.status(200).json({ status: "Tag Updated Successfully", data: updatedTag });
+    res.status(200).json({ status: "Tag Updated Successfully",  updatedTag });
   } catch (error) {
     res.status(400).json({ status: "Error", data: error.message });
   }

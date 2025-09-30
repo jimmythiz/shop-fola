@@ -1,19 +1,25 @@
 import "./AdvertComponent.css"
-import { useContext } from "react";
+import { useContext,useRef } from "react";
 import { ProductContext } from "../../../utilities/Context/productscontext";
 
 const AdvertComponent = () => {
-    const context = useContext(ProductContext);
-    if (!context) {
-    throw new Error("useProductContext must be used within a ProductContextProvider");
-  }
- 
-const { data, isLoading, error } = context;
-    
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading content</p>;
-    if (!data || data.length === 0) return <p>No Promo Items At The Moment</p>;
-     const promoImage = data[0]?.images?.[0] ;
+    const scrollRef = useRef<HTMLDivElement>(null);
+        const context = useContext(ProductContext);
+            if (!context) {
+            throw new Error("useProductContext must be used within a ProductContextProvider");
+          }
+         
+        const { trending, isLoading, error } = context;
+         if (isLoading) {
+        return <div>Loading Products... ⏳</div>;
+      }
+      if (error) {
+        return <div>Error loading  products: {error.message} 😞</div>;
+      }
+
+
+    if (!trending || trending.length === 0) return <p>No Promo Items At The Moment</p>;
+     const promoImage = trending[0]?.images?.[0] ;
     return (
     <div className="advert-container">
         <div className="advert-text">
