@@ -5,8 +5,8 @@ const api = axios.create({
 })
 export default api;
 
-let accessToken = null;
-export const setAccessToken = (token)=>{
+let accessToken:string | null = null
+export const setAccessToken = (token: string | null)=>{
     accessToken = token
 }
 
@@ -21,17 +21,22 @@ api.interceptors.request.use(
     (error)=>Promise.reject(error)
 );
 
-let isRefreshing = false;
-let failedQueue = [];
+interface FailedRequest {
+  resolve: (token?: string | null) => void;
+  reject: (error: unknown) => void;
+}
 
-const processQueue = (error, token = null) => {
+let isRefreshing = false;
+let failedQueue: FailedRequest[] = [];
+
+const processQueue = (error:unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) prom.reject(error);
     else prom.resolve(token);
   });
   failedQueue = [];
 };
-export const logout = async () =>{
+export const logout = async (): Promise<void> =>{
     await api.post('/auth/logout');
     setAccessToken(null)
     window.location.href = '/login'
@@ -64,7 +69,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             isRefreshing = true
             try{
-                const {data} = await api.post(`/auth/refresh-token`, {}, {withCredentials:true})
+                const {data} = await api.post<{ accessToken: string }>(`/auth/refresh-token`, {}, {withCredentials:true})
                 setAccessToken(data.accessToken)
                 processQueue(null, data.accessToken);
                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`

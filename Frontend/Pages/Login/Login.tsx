@@ -1,23 +1,27 @@
 import './Login.css'
 import loginimage from "../../src/assets/loginimage.png"
-import { useState } from 'react'
-import api, { setAccessToken } from "./../../utilities/api.js"
+import { useState, ChangeEvent, FormEvent } from 'react'
+import api, { setAccessToken } from "../../utilities/api"
 import { Link } from 'react-router-dom'
 
+type FormData = {
+  email: string;
+  password: string;
+};
 
 const Login = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email : "",
     password : ""
   })
-  const handleChange = (e) => {
+  const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target; 
     setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
   }
-  const handleSubmit = async (e)  =>{
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>)  =>{
     e.preventDefault();
     try{
       const response = await api.post(`/auth/login`,formData)
@@ -25,9 +29,9 @@ const Login = () => {
         setAccessToken(response.data.accessToken)
       }
       window.location.href = "/"
-    }catch(error){
-      console.log("Login error:", error)
-    }
+    }catch(error:any){
+        console.error("Error Login in:", error.response?.data || error.message);
+      }
   }
   return (
     <div className="log-in-container">
