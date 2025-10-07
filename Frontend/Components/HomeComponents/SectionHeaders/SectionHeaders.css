@@ -46,6 +46,10 @@
     border-radius: 50%;
     padding: .5rem;
 }
+.section-headers-view-all a{
+  color: white;
+  text-decoration: none;
+}
 .section-headers-view-all{
     background-color: #DB4444;
     color: white;

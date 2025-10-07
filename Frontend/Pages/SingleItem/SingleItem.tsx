@@ -28,6 +28,7 @@ const SingleItem: React.FC = () => {
       setProduct(fetched);
     })();
   }, [id, fetchProduct]);
+  console.log(product)
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading content</p>;

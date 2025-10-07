@@ -1,4 +1,5 @@
 import './SectionHeaders.css'
+import { Link } from 'react-router-dom';
 import type { RefObject } from "react";
 
 
@@ -58,7 +59,7 @@ const SectionHeaders = ({details}:ProfileCardProps) => {
             </div>
             )}
             {details.showAllBtn && (
-              <button className='section-headers-view-all'>View All</button>
+              <button className='section-headers-view-all'><Link to='/allproducts'>View All</Link></button>
             )}
         </div>
         </>

@@ -14,6 +14,8 @@ import NotFound from "../Pages/NotFound/NotFound";
 import PaymentOptions from "../Pages/PaymentOptions/PaymentOptions";
 import Cart from "../Pages/Cart/Cart";
 import SingleItem from "../Pages/SingleItem/SingleItem";
+import AllProducts from '../Pages/AllProducts/AllProducts'
+import CategoryPage from '../Pages/CategoryProducts/CategoryProducts'
 
 function App() {
   return (
@@ -29,7 +31,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/myaccount" element={<MyAccount />} />
             <Route path="/paymentoptions" element={<PaymentOptions />} />
+            <Route path="/allproducts" element={<AllProducts />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/category/:categoryName" element={<CategoryPage />} />
+
             <Route path="/products/:id" element={<SingleItem />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

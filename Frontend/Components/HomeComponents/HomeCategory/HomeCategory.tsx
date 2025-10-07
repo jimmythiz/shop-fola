@@ -49,7 +49,7 @@ const HomeCategory = () => {
         <SectionHeaders details={details}/>
         <div className="home-category-scroller" ref={scrollRef}>
           {categories.map((category,index)=>(
-            <Link to="/contact" key={index}>
+            <Link to={`/category/${category.name.toLowerCase()}`} key={index}>
               <CategoryCard  category={category}/>
             </Link>
           ))}

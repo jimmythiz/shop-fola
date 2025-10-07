@@ -50,7 +50,7 @@ const TimeSection = () => {
             ))}
         </div>
         <div className="time-section-all-link">
-            <a href="/">View All Product</a>
+            <Link to="/allproducts">View All Product</Link>
         </div>
     </div>
   )

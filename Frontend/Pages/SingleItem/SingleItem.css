@@ -88,7 +88,7 @@
 }
 .singleitem-container .singleitem-details .anything-division .singleitem-description .product-size .single-product-size div{
     height: 32px;
-    width: 32px;
+    width: fit-content;
     border-radius: 5px;
     padding: 5px;
     border: 2px solid gray;

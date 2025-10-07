@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 
-const useFetch = (baseUrl:string) => {
-  const [data, setData] = useState<any[]>([]);
+function useFetch<T = any>(baseUrl: string) {
+  const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -11,7 +11,6 @@ const useFetch = (baseUrl:string) => {
       try {
         const response = await axios.get(baseUrl);
         setData(response.data.products || response.data);
-        console.log(response.data.products)
       } catch (error) {
         setError(error);
       } finally {
