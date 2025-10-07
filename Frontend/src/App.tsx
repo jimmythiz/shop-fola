@@ -7,7 +7,7 @@ import Footer from "../Components/Footer/Footer";
 import Home from "../Pages/Home/Home";
 import Contact from "../Pages/Contact/Contact";
 import About from "../Pages/About/About";
-import SignIn from "../Pages/SignIn/SignIn";
+import SignUp from "../Pages/SignIn/SignUp";
 import Login from "../Pages/Login/Login";
 import MyAccount from "../Pages/MyAccount/MyAccount";
 import NotFound from "../Pages/NotFound/NotFound";
@@ -27,7 +27,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/myaccount" element={<MyAccount />} />
             <Route path="/paymentoptions" element={<PaymentOptions />} />

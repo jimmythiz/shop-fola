@@ -1,14 +1,17 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import App from './App'
 import {BrowserRouter} from "react-router-dom";
 
-import ProductContextProvider from "../utilities/Context/productscontext.tsx"; 
+import ProductContextProvider from "../utilities/Context/productscontext"; 
+import { AuthProvider } from "../utilities/Context/authcontext";
 
 createRoot(document.getElementById('root')!).render(
-  <ProductContextProvider>
     <BrowserRouter>
-    <App />
+     <AuthProvider>
+     <ProductContextProvider>
+          <App />
+        </ProductContextProvider>
+    </AuthProvider>
     </BrowserRouter>
-  </ProductContextProvider>,
 )
