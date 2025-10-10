@@ -15,6 +15,14 @@ const cartSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        selectedColor: {
+          type: String, 
+          required: false,
+        },
+        selectedSize: {
+          type: String, 
+          required: false,
+        },
         quantity: {
           type: Number,
           required: true,
@@ -23,11 +31,11 @@ const cartSchema = new mongoose.Schema(
         },
         price: {
           type: Number,
-          default: 0, // will be auto-fetched from Product
+          default: 0, 
         },
         subtotal: {
           type: Number,
-          default: 0, // auto-calculated
+          default: 0, 
         },
       },
     ],

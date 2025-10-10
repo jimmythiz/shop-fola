@@ -5,6 +5,8 @@ import {
   editCart,
   updateCart,
   deleteCart,
+    removeCartItem,
+
 } from "../controllers/cartController.js";
 import { isAdmin, isAuthenticated } from "../middleware/authMiddleware.js";
 
@@ -18,5 +20,7 @@ cartRouter.get("/my-cart", isAuthenticated, getCart);
 cartRouter.post("/my-cart", isAuthenticated, editCart);
 cartRouter.put("/my-cart", isAuthenticated, updateCart);
 cartRouter.delete("/my-cart", isAuthenticated, deleteCart);
+cartRouter.post("/remove-item", isAuthenticated, removeCartItem);
+
 
 export default cartRouter;
